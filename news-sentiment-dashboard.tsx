@@ -25,10 +25,11 @@ export default function Component() {
     const response = await fetch(`/api/sentiment?ticker=${ticker.toUpperCase()}`);
     const result = await response.json();
     //check if the result is empty
-    if(result.length === 0){
+    if(result.length === 0 || result.error !== "") {
       // prompt friendly error to user with proper UI
-      alert(`No data found for ticker. May have went pass the API limit.`);
+      alert(`No data found for ticker. May have went pass the API limit or ticker is invalid. Please try again later or use a different ticker.`);
       // reset the state 
+      setTicker("");
       setLoading(false);
       setData(null);
 
@@ -69,7 +70,11 @@ export default function Component() {
   }
 
   const formatDate = (timestamp: string) => {
-    const date = new Date(timestamp)
+    if (!timestamp) return "N/A";
+  // "20250611T150043" → "2025-06-11T15:00:43"
+  const iso = `${timestamp.slice(0,4)}-${timestamp.slice(4,6)}-${timestamp.slice(6,8)}T${timestamp.slice(9,11)}:${timestamp.slice(11,13)}:${timestamp.slice(13,15)}`;
+  const date = new Date(iso);
+    
     return date.toLocaleDateString() + " " + date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
   }
 
@@ -179,7 +184,7 @@ export default function Component() {
                         <TableCell>
                           <Badge variant="outline">{article.source}</Badge>
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="max-w-[120px]">
                           <div className="flex items-center gap-1 text-sm text-gray-500">
                             <Clock className="w-3 h-3" />
                             {formatDate(article.timestamp)}
