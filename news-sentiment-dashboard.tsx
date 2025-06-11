@@ -8,68 +8,6 @@ import { Badge } from "@/components/ui/badge"
 import { Search, TrendingUp, TrendingDown, Minus, ExternalLink, Clock } from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
-
-// Mock data for demonstration
-const mockData = {
-  AAPL: {
-    overall: {
-      sentiment: "positive",
-      score: 0.72,
-      totalArticles: 156,
-      positiveCount: 89,
-      neutralCount: 45,
-      negativeCount: 22,
-    },
-    news: [
-      {
-        id: 1,
-        headline: "Apple Reports Strong Q4 Earnings, Beats Expectations",
-        source: "Reuters",
-        timestamp: "2024-01-15T10:30:00Z",
-        sentiment: "positive",
-        score: 0.85,
-        url: "#",
-      },
-      {
-        id: 2,
-        headline: "iPhone 15 Sales Show Steady Growth in Asian Markets",
-        source: "Bloomberg",
-        timestamp: "2024-01-15T08:15:00Z",
-        sentiment: "positive",
-        score: 0.68,
-        url: "#",
-      },
-      {
-        id: 3,
-        headline: "Apple Faces Regulatory Challenges in EU Market",
-        source: "Financial Times",
-        timestamp: "2024-01-14T16:45:00Z",
-        sentiment: "negative",
-        score: -0.42,
-        url: "#",
-      },
-      {
-        id: 4,
-        headline: "Apple's Services Revenue Continues Upward Trajectory",
-        source: "CNBC",
-        timestamp: "2024-01-14T14:20:00Z",
-        sentiment: "positive",
-        score: 0.76,
-        url: "#",
-      },
-      {
-        id: 5,
-        headline: "Mixed Analyst Views on Apple's Vision Pro Launch",
-        source: "MarketWatch",
-        timestamp: "2024-01-14T11:30:00Z",
-        sentiment: "neutral",
-        score: 0.05,
-        url: "#",
-      },
-    ],
-  },
-}
-
 export default function Component() {
   const [ticker, setTicker] = useState("")
   const [searchedTicker, setSearchedTicker] = useState("")
@@ -86,6 +24,16 @@ export default function Component() {
     // This is where you would normally call your API to fetch the data use that api, non-mock
     const response = await fetch(`/api/sentiment?ticker=${ticker.toUpperCase()}`);
     const result = await response.json();
+    //check if the result is empty
+    if(result.length === 0){
+      // prompt friendly error to user with proper UI
+      alert(`No data found for ticker. May have went pass the API limit.`);
+      // reset the state 
+      setLoading(false);
+      setData(null);
+
+      return
+    }
     setData(result);
     setLoading(false);
   }
