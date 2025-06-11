@@ -28,7 +28,7 @@ export default function Component() {
     console.log(result.error)
     console.log(result.error !== "undefined")
     console.log(result.error != "")
-    if(result.length === 0 || (result.error !== "undefined" && result.error != "")) {
+    if(result.length === 0 || (result.error !== undefined && result.error !== "")) {
       // prompt friendly error to user with proper UI
       alert(`No data found for ticker. May have went pass the API limit or ticker is invalid. Please try again later or use a different ticker.`);
       // reset the state 
